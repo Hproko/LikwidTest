@@ -244,16 +244,21 @@ void newton_Inexato(funcao_t *f, newtonInex_t *newt){
 
         if(norma_grad(f, newt->X) < f->eps) return;
 
-        
+        LIKWID_MARKER_START("Calc_vet_grad_NI");
         for(int i=0; i<n; i++)//calculo do vetor gradiente para os valores de x
             newt->b[i] = - rosenbrock_dx(i, newt->X, n);
+        LIKWID_MARKER_STOP("Calc_vet_grad_NI");
 
+        LIKWID_MARKER_START("Calc_matriz_hess_NI");
         calc_matriz_coeficientes(newt->matriz_coeficientes, f, newt->X, n);
-        
+        LIKWID_MARKER_STOP("Calc_matriz_hess_NI");
+
         Tsl = timestamp();
 
+        LIKWID_MARKER_START("Calc_Sist_Linear_NI");
         //resolve o sistema linear
         Gauss_Seidel(newt, n);
+        LIKWID_MARKER_STOP("Calc_Sist_Linear_NI");
 
         Tsl = timestamp() - Tsl;
 
@@ -293,7 +298,9 @@ void executa_metodos(funcao_t *f, newton_t *n1, newtonMod_t *n2, newtonInex_t *n
 
     n3->TtotalGS = timestamp();
 
+    LIKWID_MARKER_START("Newton_Inexato");
     newton_Inexato(f, n3);
+    LIKWID_MARKER_STOP("Newton_Inexato");
 
     n3->TtotalGS = timestamp() - n3->TtotalGS;
 

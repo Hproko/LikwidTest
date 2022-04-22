@@ -16,7 +16,7 @@ for N in 10 32 50 64 100 128 200 250 256 300 400 512 600 1000 1024 2000 2048 300
 do
 	echo "Calculando rosenbrock $N variaveis"
 
-	L3=$(likwid-perfctr -C 3 -g L3 -m ./newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat | grep "L3 bandwidth" | cut -d'|' -f3)
+	L3=$(likwid-perfctr -C 3 -g L3 -m ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat | grep "L3 bandwidth" | cut -d'|' -f3)
 	
 	echo "$N $(echo $L3 | cut -d' ' -f1)" >> tabelas/newtonPadraoL3.dat
 
@@ -34,14 +34,14 @@ do
 	
 	echo "$N $(echo $L3 | cut -d' ' -f8)" >> tabelas/SistLinearNIL3.dat
 
-	L2CACHE=$(likwid-perfctr -C 3 -g L2CACHE -m ./newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat | grep "L2 miss ratio" | cut -d'|' -f3)
+	L2CACHE=$(likwid-perfctr -C 3 -g L2CACHE -m ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat | grep "L2 miss ratio" | cut -d'|' -f3)
 
 
-	TIME=$(likwid-perfctr -C 3 -g L3 -m ./newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat| grep "RDTSC Runtime" | cut -d'|' -f3)
+	TIME=$(likwid-perfctr -C 3 -g L3 -m ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat| grep "RDTSC Runtime" | cut -d'|' -f3)
 
 	
 
-	likwid-perfctr -C 3 -g FLOPS_DP -m -o out.txt ./newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat
+	likwid-perfctr -C 3 -g FLOPS_DP -m -o out.txt ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat
 
 	FLOPS=$(cat out.txt | grep "MFLOP/s" | cut -d'|' -f3)
 	
