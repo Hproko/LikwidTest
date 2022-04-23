@@ -36,7 +36,7 @@ typedef struct{
     
     double *vetor_b; //vetor de variaveis independentes
 
-    double **matriz_coeficientes; 
+    double *matriz_coeficientes; 
 
     double *X; //vetor de valores de x (x1, x2, x3, ..., xn)
 
@@ -86,7 +86,7 @@ typedef struct{
 
 typedef struct{
 
-    double **matriz_coeficientes;
+    double *matriz_coeficientes;
 
     double *delta; 
 

@@ -88,14 +88,9 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
 
 
     //Aloca memoria para a estrututra newton_t
-    n->matriz_coeficientes = malloc(k * sizeof(double *));
+    n->matriz_coeficientes = malloc(k * k * sizeof(double));
     if(!n->matriz_coeficientes) sem_memoria("matriz coeficientes newton_t");
 
-    for(int i=0; i<k; i++){
-        n->matriz_coeficientes[i] = malloc(k * sizeof(double));
-        if(!n->matriz_coeficientes[i])
-            sem_memoria("matriz coeficientes newton_t");
-    }
 
     n->delta = malloc(k * sizeof(double));
     if(!n->delta)sem_memoria("delta newton_t");
@@ -112,68 +107,15 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
 
 
 
-    //Aloca memoria para a matriz de coeficientes de newtonMod_t
-    n2->matriz_coeficientes = malloc(k * sizeof(double *));
-    if(!n2->matriz_coeficientes) sem_memoria("matriz coeficientes newtonMod_t");
-
-    for(int i=0; i<k; i++){
-        n2->matriz_coeficientes[i] = malloc(k * sizeof(double));
-        if(!n2->matriz_coeficientes[i]) 
-            sem_memoria("matriz coeficientes newtonMod_t");
-    }
-
-    //Aloca memoria para a matriz L do newtonMod_t
-    n2->L = malloc(k * sizeof(double *));
-    if(!n2->L) sem_memoria("matriz L newtonMod_t");
-
-    for(int i=0; i<k; i++){
-        n2->L[i] = calloc(k, sizeof(double));
-        if(!n2->L[i])
-            sem_memoria("matriz L newtonMod_t");
-    }
-
-    //Aloca memoria para a matriz U do newtonMod_t
-    n2->U = malloc(k * sizeof(double *));
-    if(!n2->U) sem_memoria("matriz U newtonMod_t");
-
-    for(int i=0;i<k; i++){
-        n2->U[i] = calloc(k, sizeof(double));
-        if(!n2->U)
-            sem_memoria("matriz U newtonMod_t"); 
-    }
-
-    n2->b = malloc(k * sizeof(double));
-    if(!n2->b) sem_memoria("vetor b newtonMod_t");
-
-    n2->y = malloc(k * sizeof(double));
-    if(!n2->y) sem_memoria("vetor y newtonMod_t");
-
-    n2->delta = malloc(k*sizeof(double));
-    if(!n2->delta) sem_memoria("delta newtonMod_t");
-
-    n2->X = malloc(k * sizeof(double));
-    if(!n2->X) sem_memoria("vetor X newtonMod_t");
-
-    n2->resultados = malloc((f->max_it+1) * sizeof(double));
-    if(!n2->resultados) sem_memoria("vetor resultados newtonMod_t");
-
-
-
-
     //Aloca memoria matriz de coeficientes de newtonInex_t
-    n3->matriz_coeficientes = malloc(k * sizeof(double *));
+    n3->matriz_coeficientes = malloc(k * k * sizeof(double));
     if(!n3->matriz_coeficientes) sem_memoria("matriz coeficientes newtonInex_t");
 
-    for(int i=0; i<k; i++){
-        n3->matriz_coeficientes[i] = malloc(k * sizeof(double));
-        if(!n3->matriz_coeficientes[i])
-            sem_memoria("matriz coeficientes newtonInex_t");
-    }
 
     n3->b = malloc(k * sizeof(double));
     if(!n3->b)sem_memoria("vetor b newtonInex_t");
 
-    n3->delta = calloc(k, sizeof(double));
+    n3->delta = malloc(k * sizeof(double));
     if(!n3->delta) sem_memoria("delta newtonInex_t");
 
     n3->X = malloc(k * sizeof(double));
@@ -192,16 +134,8 @@ void desaloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n
 
     int k = f->num_var;
 
-    
-    //Libera memoria da estrutura funcao_t
-    for(int i=0; i<k; i++){
-        //evaluator_destroy(f->vetor_gradiente[i]);
-        free(n->matriz_coeficientes[i]);
-        free(n2->matriz_coeficientes[i]);
-        free(n3->matriz_coeficientes[i]);
-        free(n2->L[i]);
-        free(n2->U[i]);
-    }
+
+
 
     //free(f->vetor_gradiente);
 
@@ -230,16 +164,6 @@ void desaloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n
     free(n->resultados);
 
 
-    //Libera memoria de newtonMod_t
-    free(n2->matriz_coeficientes);
-    free(n2->L);
-    free(n2->U);
-    free(n2->delta);
-    free(n2->y);
-    free(n2->b);
-    free(n2->X);
-    free(n2->resultados);
-
 
     //Libera memoria de newtonInex_t
     free(n3->matriz_coeficientes);
@@ -255,21 +179,21 @@ void inicia_estruturas(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *
 
     aloca_memoria(f, n, n2, n3);
 
-    n2->HESS_STEPS = f->num_var;
+    // n2->HESS_STEPS = f->num_var;
 
     for(int i=0; i<f->num_var; i++){
         n->X[i] = f->aprox_inicial[i];
-        n2->X[i] = f->aprox_inicial[i];
+        // n2->X[i] = f->aprox_inicial[i];
         n3->X[i] = f->aprox_inicial[i];
     }
 
     n->num_resultados = 0;
-    n2->num_resultados = 0;
+    // n2->num_resultados = 0;
     n3->num_resultados = 0;
 
 
     n->TslEG = 0;
-    n2->TslLU = 0;
+    // n2->TslLU = 0;
     n3->TslGS = 0;
 
     /*double Tderivadas = timestamp();

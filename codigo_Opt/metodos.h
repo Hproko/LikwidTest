@@ -14,7 +14,7 @@ void eliminacao_Gauss(double **A, double *b, int n);
 //Metodos de gauss seidel resolve o sistema linear atraves de iteracoes 
 //Isolando as variaveis em cada equacao do sistema linear
 //A funcao recebe um ponteiro para um newtonInex_t e o numero de variaveis do sistema
-void Gauss_Seidel(newtonInex_t *newt, int n);
+void Gauss_Seidel(double * restrict delta, double * restrict Xant, double * restrict b, double * restrict Mcoeficientes, int n);
 
 
 //fatLU recebe uma matriz A e realiza a fatoracao e guarda as matrizes resultantes em L e U

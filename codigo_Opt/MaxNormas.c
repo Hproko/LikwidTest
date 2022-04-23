@@ -6,10 +6,10 @@
 
 
 
-int Max_coluna(double **A, int i, int n){
+int Max_coluna(double *A, int i, int n){
 
     //maior = elemento da diagonal principal em modulo
-    double maior = fabs(A[i][i]);
+    double maior = fabs(A[i * n + i]);
     
 
     int index = i;
@@ -18,7 +18,7 @@ int Max_coluna(double **A, int i, int n){
 
     for(int j=i; j<n; j++){
 
-        aux = fabs(A[j][i]);
+        aux = fabs(A[j * n + i]);
 
         if (aux > maior){
             index = j;
@@ -31,15 +31,15 @@ int Max_coluna(double **A, int i, int n){
 }
 
 
-void troca_linha(double **A, double *b, int i, int ipivo, int n){
+void troca_linha(double *A, double *b, int i, int ipivo, int n){
 
     double aux1, aux2;
 
     //troca linhas da matriz A
     for(int j=0; j<n; j++){
-        aux1 = A[i][j];
-        A[i][j] = A[ipivo][j];
-        A[ipivo][j] = aux1;
+        aux1 = A[i * n + j];
+        A[i * n + j] = A[ipivo * n + j];
+        A[ipivo * n + j] = aux1;
     }
 
     //troca linha no vetor b

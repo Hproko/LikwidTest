@@ -12,7 +12,7 @@ all: newtonPC
 
 
 newtonPC: $(OBJS)
-	  gcc $(OBJS) -o newtonPC $(LFLAGS)
+	  gcc $(OBJS) -o newtonPC $(LFLAGS) 
 
 
 
