@@ -48,9 +48,9 @@ int main(int argc, char **argv){
 
         inicia_estruturas(&func, &newt, &newtonInex);
 
-        // executa_metodos(&func, &newt, &newtonInex);
+        executa_metodos(&func, &newt, &newtonInex);
 
-        // imprime_resultados(&func, &newt, &newtonInex, arq);
+        imprime_resultados(&func, &newt, &newtonInex, arq);
 
         desaloca_memoria(&func, &newt, &newtonInex);
     
