@@ -16,12 +16,12 @@ int entrada_funcoes(funcao_t *f);
 void aloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3);
 
 //Desaloca toda memoria alocada incluindo as funcoes da libmatheval
-void desaloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3);
+void desaloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3);
 
 //Aloca memoria, seta valores e calcula as derivadas do vetor gradiente e da matriz Hessiana
-void inicia_estruturas(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3);
+void inicia_estruturas(funcao_t *f, newton_t *n, newtonInex_t *n3);
 
 
 //Imprime os valores de fx e dos tempos de execucao
-void imprime_resultados(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3, FILE* arq);
+void imprime_resultados(funcao_t *f, newton_t *n, newtonInex_t *n3, FILE* arq);
 

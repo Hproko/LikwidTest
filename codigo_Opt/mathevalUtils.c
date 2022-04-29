@@ -58,11 +58,15 @@ double norma_grad(funcao_t *f, double *v){
 
 
 
-void calc_matriz_coeficientes(double *A, funcao_t *f, double *v, int n){
-    
-    for(int i=0;i<n;i++)
-            for(int j=0;j<n;j++)
-                A[i * n + j] = rosenbrock_dxdy(i, j, v, n);
+void calc_matriz_coeficientes(double * restrict v, int n, double * restrict a, double * restrict d, double * restrict c){
+
+    for(int i=0; i<n; i++)
+        d[i] = rosenbrock_dxdy(i, i, v, n);
+
+    for(int i=0; i<n-1; i++){
+        c[i] = rosenbrock_dxdy(i, i+1, v, n); 
+        a[i] = rosenbrock_dxdy(i+1, i, v, n);
+    }
 }
 
 

@@ -26,7 +26,6 @@ int main(int argc, char **argv){
 
     newton_t newt;
 
-    newtonMod_t newtonMod;
 
     newtonInex_t newtonInex;
 
@@ -47,13 +46,13 @@ int main(int argc, char **argv){
     //enquanto receber entradas executa os metodos de newton
     while(entrada_funcoes(&func)){
 
-        inicia_estruturas(&func, &newt, &newtonMod, &newtonInex);
+        inicia_estruturas(&func, &newt, &newtonInex);
 
-        executa_metodos(&func, &newt, &newtonMod, &newtonInex);
+        // executa_metodos(&func, &newt, &newtonInex);
 
-        imprime_resultados(&func, &newt, &newtonMod, &newtonInex, arq);
+        // imprime_resultados(&func, &newt, &newtonInex, arq);
 
-        desaloca_memoria(&func, &newt, &newtonMod, &newtonInex);
+        desaloca_memoria(&func, &newt, &newtonInex);
     
     }
     

@@ -37,10 +37,11 @@ void troca_linha(double *A, double *b, int i, int ipivo, int n){
 
     //troca linhas da matriz A
     for(int j=0; j<n; j++){
-        aux1 = A[i * n + j];
-        A[i * n + j] = A[ipivo * n + j];
-        A[ipivo * n + j] = aux1;
+        aux1 = A[i*n+j];
+        A[i*n+j] = A[ipivo*n+j];
+        A[ipivo*n+j] = aux1;
     }
+
 
     //troca linha no vetor b
     if(!b){
@@ -57,11 +58,13 @@ double norma_delta(double *delta, int n){
 
     //maior = | delta[0] |
     double maior = fabs(delta[0]);
+    double aux;
 
     for(int i=0; i<n; i++){
 
-        if(fabs(delta[i]) > maior)
-            maior = fabs(delta[i]);
+        aux = fabs(delta[i]);
+        if(aux > maior)
+            maior = aux;
 
     }
 
@@ -73,6 +76,7 @@ double norma_delta(double *delta, int n){
 
 double max_erro(double *X, double *Xant, int n){
 
+    
     double max = fabs(X[0] - Xant[0]);
     double aux;
 

@@ -51,45 +51,19 @@ int entrada_funcoes(funcao_t *f){
         free(f->aprox_inicial);
         return 0;
     }
-    
-    /*f->f = evaluator_create(f->func); //cria funcao para funcao de entrada
-
-    /if(!f->f){
-        fprintf(stderr, "Erro ao criar funcao com a lib matheval\n");
-        exit(1);
-    }
-
-    //guarda nomes das variaveis
-    evaluator_get_variables(f->f, &f->variaveis, &f->num_var);*/
 
     return 1;
 
 }
 
 
-void aloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
+void aloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3){
 
     int k = f->num_var;
 
 
-    //Aloca memoria para as funcoes do vetor gradiente e da hessiana
-    /*f->vetor_gradiente = malloc(k * sizeof(void *));
-    if(! f->vetor_gradiente) sem_memoria("vetor gradiente");
-
-    f->Hessiana = malloc(k * sizeof(void **));
-    if(!f->Hessiana) sem_memoria("Hessiana");
-
-    for(int i=0; i<k; i++){
-        f->Hessiana[i] = malloc(k * sizeof(void *));
-        if(!f->Hessiana[i])
-            sem_memoria("Hessiana");
-    }*/
-
-
 
     //Aloca memoria para a estrututra newton_t
-    n->matriz_coeficientes = malloc(k * k * sizeof(double));
-    if(!n->matriz_coeficientes) sem_memoria("matriz coeficientes newton_t");
 
 
     n->delta = malloc(k * sizeof(double));
@@ -104,16 +78,17 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
     n->resultados = malloc((f->max_it+1) * sizeof(double));
     if(!n->resultados) sem_memoria("vetor resultados newton_t");
 
+    n->d = malloc(k * sizeof(double));
+    n->a = malloc((k-1) * sizeof(double));
+    n->c = malloc((k-1) * sizeof(double));
 
-
+    if(!n->d || !n->a || !n->c) sem_memoria("vetores a, d, c newton_t");
 
     //Aloca memoria matriz de coeficientes de newtonInex_t
-    n3->matriz_coeficientes = malloc(k * k * sizeof(double));
-    if(!n3->matriz_coeficientes) sem_memoria("matriz coeficientes newtonInex_t");
 
 
-    n3->b = malloc(k * sizeof(double));
-    if(!n3->b)sem_memoria("vetor b newtonInex_t");
+    n3->vetor_b = malloc(k * sizeof(double));
+    if(!n3->vetor_b)sem_memoria("vetor b newtonInex_t");
 
     n3->delta = malloc(k * sizeof(double));
     if(!n3->delta) sem_memoria("delta newtonInex_t");
@@ -127,57 +102,46 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
     n3->resultados = malloc((f->max_it+1) * sizeof(double));
     if(!n3->resultados) sem_memoria("vetor resultados newtonInex_t");
     
+    n3->d = malloc(k * sizeof(double));
+    n3->a = malloc((k-1)*sizeof(double));
+    n3->c = malloc((k-1) * sizeof(double));
+    if(!n3->d || !n3->a || !n3->c) sem_memoria("vetores a, d, c newtonInex_t");
 }
 
 
-void desaloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
+void desaloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3){
 
-    int k = f->num_var;
-
-
-
-
-    //free(f->vetor_gradiente);
-
-
-    /*for(int i=0; i<k; i++)
-        for(int j=0; j<k; j++) 
-            evaluator_destroy(f->Hessiana[i][j]);
-
-    for(int i=0; i<k; i++)
-        free(f->Hessiana[i]);
-
-
-    free(f->Hessiana);*/
 
     free(f->aprox_inicial);
-
-    //evaluator_destroy(f->f);
 
 
 
     //Libera memoria da estrutura newton_t
+    free(n->d);
+    free(n->a);
+    free(n->c);
     free(n->delta);
     free(n->vetor_b);
-    free(n->matriz_coeficientes);
     free(n->X); 
     free(n->resultados);
 
 
 
     //Libera memoria de newtonInex_t
-    free(n3->matriz_coeficientes);
-    free(n3->b);
+    free(n3->vetor_b);
     free(n3->delta);
     free(n3->X);
     free(n3->Xant);
     free(n3->resultados);
+    free(n3->d);
+    free(n3->a);
+    free(n3->d);
 }
 
 
-void inicia_estruturas(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
+void inicia_estruturas(funcao_t *f, newton_t *n, newtonInex_t *n3){
 
-    aloca_memoria(f, n, n2, n3);
+    aloca_memoria(f, n, n3);
 
     // n2->HESS_STEPS = f->num_var;
 
@@ -196,17 +160,6 @@ void inicia_estruturas(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *
     // n2->TslLU = 0;
     n3->TslGS = 0;
 
-    /*double Tderivadas = timestamp();
-
-    Calcula_Vgradiente(f);
-
-    Calcula_Hessiana(f);
-
-    Tderivadas = timestamp() - Tderivadas;
-
-    n->TderivadasEG = Tderivadas;
-    n2->TderivadasLU = Tderivadas;
-    n3->TderivadasGS = Tderivadas; */
 
 }
 
@@ -225,7 +178,7 @@ void printa_valores(double *v, int i, int n, FILE* arq){
 
 }
 
-void imprime_resultados(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3, FILE *arq){
+void imprime_resultados(funcao_t *f, newton_t *n, newtonInex_t *n3, FILE *arq){
 
 
 

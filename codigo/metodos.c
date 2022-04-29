@@ -45,6 +45,7 @@ void eliminacao_Gauss(double **A, double *b, int n){
 
 void Gauss_Seidel(newtonInex_t *newt, int n){
 
+    memset(newt->delta, 0, n*sizeof(double));
 
     for(int i=0; i<50; i++){
 

@@ -18,117 +18,54 @@
 #include "Rosenbrock.h"
 
 
-void eliminacao_Gauss(double * restrict A, double * restrict b, int n){
+void eliminacao_Gauss(double * restrict b, int n, double * restrict a, double * restrict c, double * restrict d){
 
 
     for(int i=0; i<n; i++){
-        
-        //pivoteamento parcial
-        int ipivo = Max_coluna(A, i, n);
-        if(i != ipivo)
-            troca_linha(A, b, i, ipivo, n);
+        double m = a[i] / d[i];
 
-        for(int k=i+1; k < n; k++){
-
-            double m = A[k * n + i] / A[i * n + i];
-            
-            A[k * n + i] = 0.0;
-            
-            for(int j=i+1; j<n; j++)//subtrai as linhas do sistema
-                A[k * n + j] -= A[i * n + j] * m;
-
-            b[k] -= b[i] * m;
-   
-        }       
+        a[i] = 0.0;
+        d[i+1] -= c[i] *m;
+        b[i+1] -= b[i] *m;
     }
 }
 
-void Gauss_Seidel(double * restrict delta, double * restrict Xant, double * restrict b, double * restrict Mcoeficientes, int n){
+void Gauss_Seidel(double * restrict delta, double * restrict Xant, double * restrict b, int n,
+                    double * restrict a, double * restrict c, double * restrict d){
 
     memset(delta, 0, n * sizeof(double));
 
     for(int i=0; i<50; i++){
 
-        for(int k=0; k<n; k++)//Guarda o valor do x anterior
-            Xant[k] = delta[k];
-
-        for(int k=0; k<n; k++){
-            delta[k] = b[k];
-
-            for(int j=0; j<n; j++){ //passa subtraindo para o outro lado da igualdade 
-
-                if(k != j)
-                    delta[k] -= delta[j] * Mcoeficientes[k * n + j];
-            }
-
-            //Por fim divide pelo seu proprio coeficiente
-            delta[k] /= Mcoeficientes[k* n + k];
-
+        Xant[0] = delta[0];
+        delta[0] = (b[0] - c[0] * delta[1])/d[0];
+        
+        for(int k=1; k<n-1; k++){
+            Xant[i] = delta[i];
+            delta[i] = (b[i] - a[i-1] * delta[i-1] - c[i] * delta[i+1])/d[i];
         }
+        
+        Xant[n-1] = delta[n-1]; 
+        delta[n-1] = (b[n-1] - a[n-1] * delta[n-2])/d[n-1];
 
         if(max_erro(delta, Xant, n) < EPS)
             return;
 
+    
     }
 }
 
-// void fatLU(double **A, double **L, double **U, double *b, int n){
 
 
-//     //Copia matriz A na matriz U
-//      for(int i=0; i<n; i++)
-//          for(int j=0; j<n; j++)
-//              U[i][j] = A[i][j];
+void retrossubs(double * restrict b, double * restrict x, int n, double * restrict a, double * restrict c, double * restrict d){
+	
 
-
-//     for(int i=0; i<n; i++){
-        
-//         //pivoteamento parcial
-//         int ipivo = Max_coluna(U, i, n);
-        
-//         if(i != ipivo){
-//             troca_linha(U, b, i, ipivo, n);
-//             troca_linha(L, NULL, i, ipivo, n);
-//         }
-
-//         for(int k=i+1; k < n; k++){
-
-//             double m = U[k][i] / U[i][i];
-            
-//             L[k][i] = m; //resultado da divisao entra na matriz L
-
-//             U[k][i] = 0.0;
-            
-//             for(int j=i+1;j<n;j++)
-//                 U[k][j] -= U[i][j] * m;
-
-//             b[k] -= b[i] * m;  
-//         }       
-//     }
-
-//     //Set 1 na diagonal da matriz L
-//     for(int i=0; i<n; i++)
-//         L[i][i] = 1.0;
-// }
-
-
-void retrossubs(double * restrict A, double * restrict b, double * restrict x, int n){
-	for(int i=n-1; i >= 0; i--){
-		//printf("x = %f\n",b[i]);
-		
-		
-		x[i] =  b[i]; //Atribui em x uma variavel independente
-		
-		for(int j = i+1; j< n; j++){
-			x[i] -= A[i * n + j] * x[j]; // multiplica o x por seu coeficiente e passa subtraindo para o outro lado
-		//	printf("x -= %f * %f\n", A[i][j], x[j]);
-		}
-
-		x[i] /= A[i * n + i]; // passa o coeficiente dividindo para o outro lado da equacao
-		//printf("x /= %f\n", A[i][i]);
-	}
+    x[n-1] = b[n-1] / d[n-1];
+    for(int i=n-2; i >= 0; --i)
+        x[i] = (b[i] - c[i] * x[i+1])/d[i];
 }
 
+void imprimeMatriz(double *a, int n);
 
 void newton(funcao_t *f, newton_t *newt){
 
@@ -146,9 +83,10 @@ void newton(funcao_t *f, newton_t *newt){
         if(norma_grad(f, newt->X) < f->eps) return;
 
         LIKWID_MARKER_START("Calc_Matriz_Hess_NP");
-        calc_matriz_coeficientes(newt->matriz_coeficientes, f, newt->X, n);
+        calc_matriz_coeficientes(newt->X, n, newt->a, newt->d, newt->c);
         LIKWID_MARKER_STOP("Calc_Matriz_Hess_NP");
 
+        // imprimeMatriz(newt->matriz_coeficientes, n);
         LIKWID_MARKER_START("Calc_Vet_Grad_NP");
         //Calculo dos elementos do vetor b
         for(int i=0;i<n;i++)
@@ -160,8 +98,8 @@ void newton(funcao_t *f, newton_t *newt){
 
         LIKWID_MARKER_START("Calc_Sist_Linear_NP");
         //Resolve sistema linear
-        eliminacao_Gauss(newt->matriz_coeficientes, newt->vetor_b, n);
-        retrossubs(newt->matriz_coeficientes, newt->vetor_b, newt->delta, n);
+        eliminacao_Gauss(newt->vetor_b, n, newt->a, newt->c, newt->d);
+        retrossubs(newt->vetor_b, newt->delta, n, newt->a, newt->c, newt->d);
         LIKWID_MARKER_STOP("Calc_Sist_Linear_NP");
         
         Tsl = timestamp() - Tsl;
@@ -180,55 +118,14 @@ void newton(funcao_t *f, newton_t *newt){
     }
 }
 
+void imprimeMatriz(double *a, int n){
+    for(int i=0;i<n; i++){
+        for(int j=0; j<n; j++)
+            printf("%f ", a[i*n+j]);
+        printf("\n");
+    }
+}
 
-// void newton_Modificado(funcao_t *f, newtonMod_t *n){
-
-//     double Tsl;
-
-//     int k = f->num_var;//n = numero de variaveis
-
-//     //calcula fx para fx(x0)
-//     n->resultados[n->num_resultados] = evaluator_evaluate(f->f, f->num_var, f->variaveis, n->X);
-//     n->num_resultados++;
-
-//     for(int i=0; i<f->max_it; i++){
-
-//         if(norma_grad(f, n->X) < f->eps) return; 
-        
-//         for(int i=0; i<k; i++)//Calcula o valor das derivadas para os valores de x e guarda no vetor b
-//             n->b[i] = - evaluator_evaluate(f->vetor_gradiente[i], k, f->variaveis, n->X);
-
-
-//         if(i % n->HESS_STEPS == 0){
-//             calc_matriz_coeficientes(n->matriz_coeficientes, f, n->X, k);
-//         }
-
-//         Tsl = timestamp();
-
-
-//         //Resolve sistema linear
-//         fatLU(n->matriz_coeficientes, n->L, n->U, n->b, k);
-//         retrossubs(n->L, n->b, n->y, k); //Resolve Ly = b
-//         retrossubs(n->U, n->y, n->delta, k); //Resolve Ux = y
-
-
-//         Tsl = timestamp() - Tsl;
-
-//         n->TslLU += Tsl;
-
-//         //Calcula o valor do novo X(i)
-//         for(int i =0; i<k; i++)
-//             n->X[i] += n->delta[i];
-
-//         n->resultados[n->num_resultados] = evaluator_evaluate(f->f, f->num_var, f->variaveis, n->X);       
-//         n->num_resultados++;
-
-//         if(norma_delta(n->delta, k) < f->eps)
-//             return;
-
-//     }
-
-// }
 
 
 void newton_Inexato(funcao_t *f, newtonInex_t *newt){
@@ -240,25 +137,24 @@ void newton_Inexato(funcao_t *f, newtonInex_t *newt){
     //resultados = fx(x0)
     newt->resultados[newt->num_resultados] = rosenbrock(newt->X, n);
     newt->num_resultados++;
-
     for(int i=0; i<f->max_it; i++){
 
         if(norma_grad(f, newt->X) < f->eps) return;
 
         LIKWID_MARKER_START("Calc_vet_grad_NI");
         for(int i=0; i<n; i++)//calculo do vetor gradiente para os valores de x
-            newt->b[i] = - rosenbrock_dx(i, newt->X, n);
+            newt->vetor_b[i] = - rosenbrock_dx(i, newt->X, n);
         LIKWID_MARKER_STOP("Calc_vet_grad_NI");
 
         LIKWID_MARKER_START("Calc_matriz_hess_NI");
-        calc_matriz_coeficientes(newt->matriz_coeficientes, f, newt->X, n);
+        calc_matriz_coeficientes(newt->X, n, newt->a, newt->d, newt->c);
         LIKWID_MARKER_STOP("Calc_matriz_hess_NI");
 
         Tsl = timestamp();
 
         LIKWID_MARKER_START("Calc_Sist_Linear_NI");
         //resolve o sistema linear
-        Gauss_Seidel(newt->delta, newt->Xant, newt->b, newt->matriz_coeficientes, n);
+        Gauss_Seidel(newt->delta, newt->Xant, newt->vetor_b, n, newt->a, newt->c, newt->d);
         LIKWID_MARKER_STOP("Calc_Sist_Linear_NI");
 
         Tsl = timestamp() - Tsl;
@@ -272,7 +168,6 @@ void newton_Inexato(funcao_t *f, newtonInex_t *newt){
         //resultados = fx(xi)
         newt->resultados[newt->num_resultados] = rosenbrock(newt->X, n);
         newt->num_resultados++;
-
         if(norma_delta(newt->delta, n) < f->eps)
             return;
 
@@ -281,7 +176,7 @@ void newton_Inexato(funcao_t *f, newtonInex_t *newt){
 }
 
 
-void executa_metodos(funcao_t *f, newton_t *n1, newtonMod_t *n2, newtonInex_t *n3){
+void executa_metodos(funcao_t *f, newton_t *n1, newtonInex_t *n3){
 
     n1->TtotalEG = timestamp();
 
@@ -291,11 +186,6 @@ void executa_metodos(funcao_t *f, newton_t *n1, newtonMod_t *n2, newtonInex_t *n
 
     n1->TtotalEG = timestamp() - n1->TtotalEG;
 
-    // n2->TtotalLU = timestamp();
-
-    // newton_Modificado(f, n2);
-
-    // n2->TtotalLU = timestamp() - n2->TtotalLU;
 
     n3->TtotalGS = timestamp();
 

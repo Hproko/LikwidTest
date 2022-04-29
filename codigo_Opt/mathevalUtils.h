@@ -15,4 +15,4 @@ void Calcula_Hessiana(funcao_t *f);
 double norma_grad(funcao_t *f, double *v);
 
 //Utilizando funcao da lib matheval calcula o valor das funcoes da matriz Hessiana e guarda na matriz de coeficientes
-void calc_matriz_coeficientes(double *A, funcao_t *f, double *v, int n);
+void calc_matriz_coeficientes(double *v, int n,  double *a, double *d, double *c);

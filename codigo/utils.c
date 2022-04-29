@@ -97,6 +97,10 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonMod_t *n2, newtonInex_t *n3){
             sem_memoria("matriz coeficientes newton_t");
     }
 
+
+
+
+
     n->delta = malloc(k * sizeof(double));
     if(!n->delta)sem_memoria("delta newton_t");
 
