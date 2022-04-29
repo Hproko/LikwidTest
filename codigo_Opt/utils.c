@@ -79,8 +79,8 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3){
     if(!n->resultados) sem_memoria("vetor resultados newton_t");
 
     n->d = malloc(k * sizeof(double));
-    n->a = malloc((k-1) * sizeof(double));
-    n->c = malloc((k-1) * sizeof(double));
+    n->a = malloc(k * sizeof(double));
+    n->c = malloc(k * sizeof(double));
 
     if(!n->d || !n->a || !n->c) sem_memoria("vetores a, d, c newton_t");
 
@@ -103,8 +103,8 @@ void aloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3){
     if(!n3->resultados) sem_memoria("vetor resultados newtonInex_t");
     
     n3->d = malloc(k * sizeof(double));
-    n3->a = malloc((k-1)*sizeof(double));
-    n3->c = malloc((k-1) * sizeof(double));
+    n3->a = malloc(k*sizeof(double));
+    n3->c = malloc(k * sizeof(double));
     if(!n3->d || !n3->a || !n3->c) sem_memoria("vetores a, d, c newtonInex_t");
 }
 
