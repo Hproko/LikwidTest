@@ -11,6 +11,7 @@ cd ..
 if [[ -d entradas_rosenbrock ]]
 then
 	rm -rf entradas_rosenbrock
+	mkdir entradas_rosenbrock
 	./gera_rosenbrock.sh
 fi
 
