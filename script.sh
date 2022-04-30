@@ -1,18 +1,22 @@
 #!/bin/bash
-
+echo "Compilando codigo otimizado"
 cd codigo_Opt # compilando codigo otimizado
 make
 cd ..
-
+echo "Compilando codigo nao otimizado"
 cd codigo # compilando codigo nao otimizado
 make
 cd ..
 
+echo "Gerando entradas rosenbrock"
 if [[ -d entradas_rosenbrock ]]
 then
 	rm -rf entradas_rosenbrock
 	mkdir entradas_rosenbrock
 	./gera_rosenbrock.sh
+else
+	mkdir entradas_rosenbrock
+	./gera_rosenbrock
 fi
 
 if ! [[ -d graficos ]]
@@ -39,11 +43,8 @@ do
 
 	echo "TIME and L3"
 
-	echo "n_otimizado"
-
 	likwid-perfctr -C 3 -g L3 -m -o L3TIME.txt ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat 
 	
-	echo "otimizado"
 
 	likwid-perfctr -C 3 -g L3 -m -o L3TIMEopt.txt ./codigo_Opt/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/outopt$N.dat
 
@@ -94,10 +95,8 @@ do
 
 	echo "L2 CACHE"
 
-	echo "n otimizado"
 	L2CACHE=$(likwid-perfctr -C 3 -g L2CACHE -m ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat | grep "L2 miss ratio" | cut -d'|' -f3)
 
-	echo "otimizado"
 	L2CACHEOPT=$(likwid-perfctr -C 3 -g L2CACHE -m ./codigo_Opt/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/outopt$N.dat | grep "L2 miss ratio" | cut -d'|' -f3)
 	
 	
@@ -119,10 +118,8 @@ do
 	
 	echo "FLOPS"
 	
-	echo "n otimizado"
 	likwid-perfctr -C 3 -g FLOPS_DP -m -o out.txt ./codigo/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/out$N.dat
 	
-	echo "otimizado"
 	likwid-perfctr -C 3 -g FLOPS_DP -m -o outopt.txt ./codigo_Opt/newtonPC < entradas_rosenbrock/rosenbrock$N.in -o outputs/outopt$N.dat
 
 	FLOPS=$(cat out.txt | grep "MFLOP/s" | cut -d'|' -f3)
