@@ -8,7 +8,7 @@ cd codigo # compilando codigo nao otimizado
 make
 cd ..
 
-if [-d entradas_rosenbrock ]
+if [[ -d entradas_rosenbrock ]]
 then
 	rm -rf entradas_rosenbrock
 	./gera_rosenbrock.sh
