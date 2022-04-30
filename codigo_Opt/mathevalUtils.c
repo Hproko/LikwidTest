@@ -42,7 +42,7 @@ double norma_grad(funcao_t *f, double *v){
     
     double aux;
 
-    for(int i=0; i<n; i++){
+    for(int i=1; i<n; i++){
         
         //aux = valor em modulo de cada funcao do vetor gradiente
         aux = fabs(rosenbrock_dx(i, v, n));

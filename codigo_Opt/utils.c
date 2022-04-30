@@ -59,83 +59,78 @@ int entrada_funcoes(funcao_t *f){
 
 void aloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3){
 
-    int k = f->num_var;
+    int k = f->num_var; 
+    n->a = (double *)malloc((k-1) * sizeof(double));
+    if(!n->a) sem_memoria("vetor a newton_t");
 
+    n->c = (double *)malloc((k-1) * sizeof(double));
+    if(!n->c) sem_memoria("vetor c newton_t");
 
+    n->d = (double *)malloc(k * sizeof(double));
+    if(!n->d)sem_memoria("vetor d newton_t");
 
-    //Aloca memoria para a estrututra newton_t
+    n->delta = (double *)malloc( k * sizeof(double));
+    if(!n->delta)sem_memoria("vetor delta newton_t");
 
+    n->resultados = (double *)malloc((f->max_it+1) * sizeof(double));
+    if(!n->resultados) sem_memoria("vetor resultado newton_t");
 
-    n->delta = malloc(k * sizeof(double));
-    if(!n->delta)sem_memoria("delta newton_t");
+    n->vetor_b = (double *)malloc(k * sizeof(double));
+    if(!n->vetor_b)sem_memoria("vetor b newton_t");
 
-    n->vetor_b = malloc(k * sizeof(double));
-    if(!n->vetor_b) sem_memoria("vetor b newton_t");
-
-    n->X = malloc(k * sizeof(double));
+    n->X = (double *)malloc(k * sizeof(double));
     if(!n->X) sem_memoria("vetor X newton_t");
-
-    n->resultados = malloc((f->max_it+1) * sizeof(double));
-    if(!n->resultados) sem_memoria("vetor resultados newton_t");
-
-    n->d = malloc(k * sizeof(double));
-    n->a = malloc(k * sizeof(double));
-    n->c = malloc(k * sizeof(double));
-
-    if(!n->d || !n->a || !n->c) sem_memoria("vetores a, d, c newton_t");
-
-    //Aloca memoria matriz de coeficientes de newtonInex_t
+   
 
 
-    n3->vetor_b = malloc(k * sizeof(double));
-    if(!n3->vetor_b)sem_memoria("vetor b newtonInex_t");
+    n3->a = (double *)malloc((k-1) * sizeof(double));
+    if(!n3->a) sem_memoria("vetor a newtonInex");
 
-    n3->delta = malloc(k * sizeof(double));
-    if(!n3->delta) sem_memoria("delta newtonInex_t");
+    n3->c = (double *)malloc((k-1) * sizeof(double));
+    if(!n3->c) sem_memoria("vetor c newtonInex");
 
-    n3->X = malloc(k * sizeof(double));
-    if(!n3->X) sem_memoria("vetor X newtonInex_t");
+    n3->d = (double *)malloc(k * sizeof(double));
+    if(!n3->d)sem_memoria("vetor d newtonInex");
 
-    n3->Xant = malloc(k * sizeof(double));
-    if(!n3->Xant) sem_memoria("X anterior newtonInex_t");
+    n3->delta= (double *)malloc(k * sizeof(double));
+    if(!n3->delta)sem_memoria("vetor delta newtonInex");
 
-    n3->resultados = malloc((f->max_it+1) * sizeof(double));
-    if(!n3->resultados) sem_memoria("vetor resultados newtonInex_t");
-    
-    n3->d = malloc(k * sizeof(double));
-    n3->a = malloc(k*sizeof(double));
-    n3->c = malloc(k * sizeof(double));
-    if(!n3->d || !n3->a || !n3->c) sem_memoria("vetores a, d, c newtonInex_t");
+    n3->resultados = (double *)malloc((f->max_it+1)*sizeof(double));
+    if(!n3->resultados)sem_memoria("vetor resultados newtonInex");
+
+    n3->vetor_b = (double *)malloc(k*sizeof(double));
+    if(!n3->vetor_b)sem_memoria("vetor b newtonInex");
+
+    n3->X = (double *)malloc(k*sizeof(double));
+    if(!n3->X)sem_memoria("vetor X newtonInex");
+
+    n3->Xant = (double *)malloc(k*sizeof(double));
+    if(!n3->Xant)sem_memoria("vetor Xant newtonInex");
 }
 
 
 void desaloca_memoria(funcao_t *f, newton_t *n, newtonInex_t *n3){
 
-
     free(f->aprox_inicial);
-
-
-
-    //Libera memoria da estrutura newton_t
-    free(n->d);
+    
     free(n->a);
     free(n->c);
+    free(n->d);
     free(n->delta);
-    free(n->vetor_b);
-    free(n->X); 
     free(n->resultados);
+    free(n->vetor_b);
+    free(n->X);
 
-
-
-    //Libera memoria de newtonInex_t
-    free(n3->vetor_b);
+    free(n3->a);
+    free(n3->c);
+    free(n3->d);
     free(n3->delta);
+    free(n3->resultados);
+    free(n3->vetor_b);
     free(n3->X);
     free(n3->Xant);
-    free(n3->resultados);
-    free(n3->d);
-    free(n3->a);
-    free(n3->d);
+
+
 }
 
 
@@ -197,7 +192,7 @@ void imprime_resultados(funcao_t *f, newton_t *n, newtonInex_t *n3, FILE *arq){
         fprintf(arq, "%d \t\t| ", i);
 
         printa_valores(n->resultados, i, n->num_resultados, arq);
-        //printa_valores(n2->resultados, i, n2->num_resultados, arq);
+        // printa_valores(n2->resultados, i, n2->num_resultados, arq);
         printa_valores(n3->resultados, i, n3->num_resultados, arq);
         fprintf(arq, "\n");
 

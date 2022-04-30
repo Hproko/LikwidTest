@@ -21,7 +21,7 @@
 void eliminacao_Gauss(double * restrict b, int n, double * restrict a, double * restrict c, double * restrict d){
 
 
-    for(int i=0; i<n; i++){
+    for(int i=0; i<n-1; i++){
         double m = a[i] / d[i];
 
         a[i] = 0.0;
@@ -34,19 +34,18 @@ void Gauss_Seidel(double * restrict delta, double * restrict Xant, double * rest
                     double * restrict a, double * restrict c, double * restrict d){
 
     memset(delta, 0, n * sizeof(double));
-
     for(int i=0; i<50; i++){
 
         Xant[0] = delta[0];
         delta[0] = (b[0] - c[0] * delta[1])/d[0];
         
         for(int k=1; k<n-1; k++){
-            Xant[i] = delta[i];
-            delta[i] = (b[i] - a[i-1] * delta[i-1] - c[i] * delta[i+1])/d[i];
+            Xant[k] = delta[k];
+            delta[k] = (b[k] - a[k-1] * delta[k-1] - c[k] * delta[k+1])/d[k];
         }
         
         Xant[n-1] = delta[n-1]; 
-        delta[n-1] = (b[n-1] - a[n-1] * delta[n-2])/d[n-1];
+        delta[n-1] = (b[n-1] - a[n-2] * delta[n-2])/d[n-1];
 
         if(max_erro(delta, Xant, n) < EPS)
             return;
@@ -65,7 +64,6 @@ void retrossubs(double * restrict b, double * restrict x, int n, double * restri
         x[i] = (b[i] - c[i] * x[i+1])/d[i];
 }
 
-void imprimeMatriz(double *a, int n);
 
 void newton(funcao_t *f, newton_t *newt){
 
@@ -107,7 +105,7 @@ void newton(funcao_t *f, newton_t *newt){
         newt->TslEG += Tsl; //Soma tempo de resolucao do sistema linear
 
         //Calcula o valor do novo X(i)
-        for(int k =0; k<n; k++)
+        for(int k=0; k<n; k++)
             newt->X[k] += newt->delta[k];
 
         newt->resultados[newt->num_resultados] = rosenbrock(newt->X, n);
@@ -118,13 +116,6 @@ void newton(funcao_t *f, newton_t *newt){
     }
 }
 
-void imprimeMatriz(double *a, int n){
-    for(int i=0;i<n; i++){
-        for(int j=0; j<n; j++)
-            printf("%f ", a[i*n+j]);
-        printf("\n");
-    }
-}
 
 
 
@@ -137,6 +128,7 @@ void newton_Inexato(funcao_t *f, newtonInex_t *newt){
     //resultados = fx(x0)
     newt->resultados[newt->num_resultados] = rosenbrock(newt->X, n);
     newt->num_resultados++;
+
     for(int i=0; i<f->max_it; i++){
 
         if(norma_grad(f, newt->X) < f->eps) return;
@@ -168,6 +160,7 @@ void newton_Inexato(funcao_t *f, newtonInex_t *newt){
         //resultados = fx(xi)
         newt->resultados[newt->num_resultados] = rosenbrock(newt->X, n);
         newt->num_resultados++;
+
         if(norma_delta(newt->delta, n) < f->eps)
             return;
 
