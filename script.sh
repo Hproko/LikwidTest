@@ -16,7 +16,7 @@ then
 	./gera_rosenbrock.sh
 else
 	mkdir entradas_rosenbrock
-	./gera_rosenbrock
+	./gera_rosenbrock.sh
 fi
 
 if ! [[ -d graficos ]]
