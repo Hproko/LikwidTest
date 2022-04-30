@@ -1,5 +1,14 @@
 #!/bin/bash
 
+cd codigo_Opt
+make
+cd ..
+
+cd codigo
+make
+cd ..
+
+
 if ! [[ -d graficos ]]
 then
 	mkdir graficos

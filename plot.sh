@@ -338,54 +338,54 @@ gnuplot -e '
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonPadraoNPFLOP.png";
+            set output "graficos/newtonPadraoFLOP.png";
             set title "FLOPS - Newton Padrao";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "FLOPS [MFLOPS/s]"; 
-            plot "tabelas/newtonPadraoNPFLOP.dat" using 1:2 with linespoints t"FLOPS - não otimizado",
-				 "tabelas/newtonPadraoNPFLOP.dat" using 1:3 with linespoints t"FLOPS AVX - não otimizado",
-				 "tabelas/newtonPadraoNPFLOP.dat" using 1:4 with linespoints t"FLOPS - otimizado",
-				 "tabelas/newtonPadraoNPFLOP.dat" using 1:5 with linespoints t"FLOPS AVX - otimizado"
+            plot "tabelas/newtonPadraoFLOP.dat" using 1:2 with linespoints t"FLOPS - não otimizado",
+				 "tabelas/newtonPadraoFLOP.dat" using 1:3 with linespoints t"FLOPS AVX - não otimizado",
+				 "tabelas/newtonPadraoFLOP.dat" using 1:4 with linespoints t"FLOPS - otimizado",
+				 "tabelas/newtonPadraoFLOP.dat" using 1:5 with linespoints t"FLOPS AVX - otimizado"
 '
 
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonPadraoNPL2.png";
+            set output "graficos/newtonPadraoL2.png";
             set title "L2 miss ratio - Newton Padrao";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "L2 miss ratio"; 
-            plot "tabelas/newtonPadraoNPL2.dat" using 1:2 with linespoints t"L2 - não otimizado",
-				 "tabelas/newtonPadraoNPL2.dat" using 1:3 with linespoints t"L2 - otimizado"
+            plot "tabelas/newtonPadraoL2.dat" using 1:2 with linespoints t"L2 - não otimizado",
+				 "tabelas/newtonPadraoL2.dat" using 1:3 with linespoints t"L2 - otimizado"
 			
 '
 
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonPadraoNPL3.png";
+            set output "graficos/newtonPadraoL3.png";
             set title "L3 bandwidth - Newton Padrao";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "L3 bandwidth [MBYTES/s]"; 
-            plot "tabelas/newtonPadraoNPL3.dat" using 1:2 with linespoints t"L3 bandwidth - não otimizado",
-				 "tabelas/newtonPadraoNPL3.dat" using 1:3 with linespoints t"L3 bandwidth - otimizado"
+            plot "tabelas/newtonPadraoL3.dat" using 1:2 with linespoints t"L3 bandwidth - não otimizado",
+				 "tabelas/newtonPadraoL3.dat" using 1:3 with linespoints t"L3 bandwidth - otimizado"
 			
 '
 
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonPadraoNPTIME.png";
+            set output "graficos/newtonPadraoTIME.png";
             set title "Tempo de Execução - Newton Padrao";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "Tempo [ms]";
 			set logscale y 2; 
-            plot "tabelas/newtonPadraoNPTIME.dat" using 1:(1000 * $2) with linespoints t"Tempo - não otimizado",
-				 "tabelas/newtonPadraoNPTIME.dat" using 1:(1000 * $3) with linespoints t"Tempo - otimizado"
+            plot "tabelas/newtonPadraoTIME.dat" using 1:(1000 * $2) with linespoints t"Tempo - não otimizado",
+				 "tabelas/newtonPadraoTIME.dat" using 1:(1000 * $3) with linespoints t"Tempo - otimizado"
 			
 '
 #Newton Inexato
@@ -393,53 +393,53 @@ gnuplot -e '
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonInexatoNIFLOP.png";
+            set output "graficos/newtonInexatoFLOP.png";
             set title "FLOPS - Newton Inexato";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "FLOPS [MFLOPS/s]"; 
-            plot "tabelas/newtonInexatoNIFLOP.dat" using 1:2 with linespoints t"FLOPS - não otimizado",
-				 "tabelas/newtonInexatoNIFLOP.dat" using 1:3 with linespoints t"FLOPS AVX - não otimizado",
-				 "tabelas/newtonInexatoNIFLOP.dat" using 1:4 with linespoints t"FLOPS - otimizado",
-				 "tabelas/newtonInexatoNIFLOP.dat" using 1:5 with linespoints t"FLOPS AVX - otimizado"
+            plot "tabelas/newtonInexatoFLOP.dat" using 1:2 with linespoints t"FLOPS - não otimizado",
+				 "tabelas/newtonInexatoFLOP.dat" using 1:3 with linespoints t"FLOPS AVX - não otimizado",
+				 "tabelas/newtonInexatoFLOP.dat" using 1:4 with linespoints t"FLOPS - otimizado",
+				 "tabelas/newtonInexatoFLOP.dat" using 1:5 with linespoints t"FLOPS AVX - otimizado"
 '
 
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonInexatoNIL2.png";
+            set output "graficos/newtonInexatoL2.png";
             set title "L2 miss ratio - Newton Inexato";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "L2 miss ratio"; 
-            plot "tabelas/newtonInexatoNIL2.dat" using 1:2 with linespoints t"L2 - não otimizado",
-				 "tabelas/newtonInexatoNIL2.dat" using 1:3 with linespoints t"L2 - otimizado"
+            plot "tabelas/newtonInexatoL2.dat" using 1:2 with linespoints t"L2 - não otimizado",
+				 "tabelas/newtonInexatoL2.dat" using 1:3 with linespoints t"L2 - otimizado"
 			
 '
 
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonInexatoNIL3.png";
+            set output "graficos/newtonInexatoL3.png";
             set title "L3 bandwidth - Newton Inexato";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "L3 bandwidth [MBYTES/s]"; 
-            plot "tabelas/newtonInexatoNIL3.dat" using 1:2 with linespoints t"L3 bandwidth - não otimizado",
-				 "tabelas/newtonInexatoNIL3.dat" using 1:3 with linespoints t"L3 bandwidth - otimizado"
+            plot "tabelas/newtonInexatoL3.dat" using 1:2 with linespoints t"L3 bandwidth - não otimizado",
+				 "tabelas/newtonInexatoL3.dat" using 1:3 with linespoints t"L3 bandwidth - otimizado"
 			
 '
 
 gnuplot -e '
             reset;
             set terminal png size 900,600;
-            set output "graficos/newtonInexatoNITIME.png";
+            set output "graficos/newtonInexatoTIME.png";
             set title "Tempo de Execução - Newton Inexato";
             set key outside right;
             set xlabel "Numero de variáveis";
             set ylabel "Tempo [ms]";
 			set logscale y 2; 
-            plot "tabelas/newtonInexatoNITIME.dat" using 1:(1000 * $2) with linespoints t"Tempo - não otimizado",
-				 "tabelas/newtonInexatoNITIME.dat" using 1:(1000 * $3) with linespoints t"Tempo - otimizado"
+            plot "tabelas/newtonInexatoTIME.dat" using 1:(1000 * $2) with linespoints t"Tempo - não otimizado",
+		"tabelas/newtonInexatoTIME.dat" using 1:(1000 * $3) with linespoints t"Tempo - otimizado"
 			
 '
