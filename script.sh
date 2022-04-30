@@ -1,13 +1,18 @@
 #!/bin/bash
 
-cd codigo_Opt
+cd codigo_Opt # compilando codigo otimizado
 make
 cd ..
 
-cd codigo
+cd codigo # compilando codigo nao otimizado
 make
 cd ..
 
+if [-d entradas_rosenbrock ]
+then
+	rm -rf entradas_rosenbrock
+	./gera_rosenbrock.sh
+fi
 
 if ! [[ -d graficos ]]
 then
