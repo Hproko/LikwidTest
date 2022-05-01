@@ -4,7 +4,7 @@ Henrique Prokopenko GRR2086712
 Trabalho para a disciplina de introdução a computação científica
 
 
-INTRUÇÕES
+INSTRUÇÕES
 
 Lembre-se de definir as variáveis de ambiente LIKWID_INCLUDE e LIKWID_LIB 
     LIKWID_INCLUDE="PathToLikwid/include"
