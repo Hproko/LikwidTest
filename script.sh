@@ -1,4 +1,6 @@
 #!/bin/bash
+#Henrique Prokopenko GRR20186712
+
 echo "Compilando codigo otimizado"
 cd codigo_Opt # compilando codigo otimizado
 make

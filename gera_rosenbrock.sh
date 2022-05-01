@@ -1,4 +1,6 @@
 #!/bin/bash
+#Henrique Prokopenko GRR20186712
+
 
 DIR="entradas_rosenbrock"
 

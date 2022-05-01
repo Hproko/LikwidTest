@@ -1,3 +1,7 @@
+#Henrique Prokopenko GRR20186712
+
+
+
 # Matriz Hessiana NI
 
 gnuplot -e '
